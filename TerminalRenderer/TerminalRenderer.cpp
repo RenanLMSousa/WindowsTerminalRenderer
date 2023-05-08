@@ -5,7 +5,7 @@ using namespace std;
 
 #include <Windows.h>
 
-#define FOREGROUND_WHITE FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
+
 
 
 ScreenContent::ScreenContent() {
@@ -31,53 +31,44 @@ ScreenContent::ScreenContent(int nScreenWidth, int nScreenHeight) {
 		this->setAllSymbolsAttributes(FOREGROUND_WHITE);
 	}
 	COORD ScreenContent::getScreenDimensions() {
-		//Returns the writeable screen dimensions
+		
 		return { (short)nScreenWidth,(short)nScreenHeight };
 	}
 	wchar_t* ScreenContent::getSymbolsBuffer() {
-		/*
-			Grants access to the symbols buffers
-			Much faster access
-		*/
+
 		return this->symbolsList;
 	}
 	WORD* ScreenContent::getSymbolsAttributesBuffer() {
-		/*Grants access to the attribute buffer
-		The available attributes are the ones defined in windows.h
-		*/
+
 		return this->symbolsColorsList;
 	}
 
 	int ScreenContent::getFullSymbolSize() {
-		//Returns the size of the writeable symbols buffer
+		
 		return nScreenWidth * nScreenHeight;
 	}
 	void ScreenContent::setAllSymbolsAttributes(WORD color) {
-		//Sets all the attributes to color
+		
 		std::fill_n(symbolsColorsList, nScreenHeight * nScreenWidth, color);
 	}
 	void ScreenContent::setAllSymbols(wchar_t symbol) {
-		//Sets all the symbols to symbol
+		
 		std::fill_n(symbolsList, nScreenHeight * nScreenWidth, symbol);
 	}
 	void ScreenContent::setSymbolsBuffer(wchar_t* newList) {
-		/*Changes the symbol buffer
-		Gotta have the same dimmensions as the previous
-		*/
+		
 
 		free(this->symbolsList);
 		this->symbolsList = newList;
 	}
 	void ScreenContent::setAsRigidColorAtPosition(WORD Color, int pos) {
-		/*
-		Turns the position into a square of the desired color
-		*/
+
 		symbolsList[pos] = ' ';
 		symbolsColorsList[pos] = Color;
 
 	}
 	void ScreenContent::setAsRigidColorAtPosition(WORD Color, COORD coord) {
-		//Same as above
+		
 		symbolsList[coord.X * nScreenWidth + coord.Y] = ' ';
 		symbolsColorsList[coord.X * nScreenWidth + coord.Y] = Color;
 		wchar_t** l = (wchar_t**)symbolsList;
@@ -131,12 +122,7 @@ ScreenContent::ScreenContent(int nScreenWidth, int nScreenHeight) {
 
 	}
 	void ScreenContent::insertStringOnScreen(string str, WORD attribute, COORD pos) {
-		/*
-			Given a string, inserts it into the screen on the desired position
-			\n are not inserted and are considered a newline
-			reads until \0
-			Out of bounds symbols aren't rendered
-		*/
+		
 		int y = pos.Y;
 		int x = pos.X;
 		int i = 0;
